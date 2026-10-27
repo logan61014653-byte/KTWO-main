@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환영합니다</title>
+</head>
+<body>
+    <h1>안녕하세요!</h1>
+    <p id="status">연결 중...</p>
+
+    <script>
+        async function saveIP() {
+            try {
+                // 1. IP 주소 가져오기
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                const userIp = ipData.ip;
+
+                document.getElementById('status').innerText = "접속이 확인되었습니다.";
+
+                // 2. 올려주신 Formspree 주소로 전송
+                const formspreeUrl = "https://formspree.io/f/xgaoqejp";
+
+                await fetch(formspreeUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ "방문자_IP": userIp })
+                });
+
+                console.log("저장 성공");
+            } catch (error) {
+                console.error("에러 발생:", error);
+            }
+        }
+
+        // 페이지가 켜지면 바로 실행
+        window.onload = saveIP;
+    </script>
+</body>
+</html>
